@@ -4,7 +4,7 @@ class CategoryController {
   async all(req, res) {
     try {
       const categories = await knex.raw(
-        "SELECT c.name , (SELECT Count(*)  FROM product b Where b.category_id = c.id ) as amount FROM  category c"
+        "SELECT c.id, c.name , (SELECT Count(*)  FROM product b Where b.category_id = c.id ) as amount FROM  category c"
       );
 
       return res.json(categories[0]);

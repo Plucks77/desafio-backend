@@ -15,5 +15,6 @@ routes.post("/user/login", userController.login);
 
 routes.get("/categories", AuthMiddleware, categoryController.all);
 routes.get("/products", AuthMiddleware, productController.all);
+routes.get("/products/:id", AuthMiddleware, productController.findByCategoryId);
 
 module.exports = routes;
