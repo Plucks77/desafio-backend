@@ -14,16 +14,27 @@ class ProductController {
 
   async findByCategoryId(req, res) {
     const category_id = req.params.id;
-    try {
-      const products = await knex
-        .select("*")
-        .from("product")
-        .where("product.category_id", "=", category_id);
-      return res.json(products);
-    } catch (e) {
-      return res.status(500).json({
-        error: error.message,
-      });
+    if (category_id == "all") {
+      try {
+        const products = await knex.select("*").from("product");
+        return res.json(products);
+      } catch (e) {
+        return res.status(500).json({
+          error: error.message,
+        });
+      }
+    } else {
+      try {
+        const products = await knex
+          .select("*")
+          .from("product")
+          .where("product.category_id", "=", category_id);
+        return res.json(products);
+      } catch (e) {
+        return res.status(500).json({
+          error: error.message,
+        });
+      }
     }
   }
 }
