@@ -21,6 +21,11 @@ routes.get("/products/:id", AuthMiddleware, productController.findByCategoryId);
 
 routes.post("/purchase", AuthMiddleware, purchaseController.store);
 routes.get("/purchases/:id", AuthMiddleware, purchaseController.purchases);
+routes.get(
+  "/purchases/products/:id",
+  AuthMiddleware,
+  purchaseController.purchasesProducts
+);
 
 routes.get("/hello", function (req, res) {
   console.log("world");

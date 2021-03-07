@@ -38,79 +38,24 @@ class PurchaseController {
 
   async purchases(req, res) {
     const user_id = req.params.id;
+
     const purchases = await knex
-      .select("*")
+      .select(["purchase.id", "purchase.installment", "purchase.total"])
       .from("purchase")
-      .where("user_id", "=", user_id);
-
-    // for (let i = 0; i < purchases.length; i++) {
-    //   const prod = await knex
-    //     .select("product_id")
-    //     .from("purchase_products")
-    //     .where("purchase_id", "=", purchases[i].id);
-
-    //   purchases.push(prod);
-    //   console.log(prod);
-    // }
-    // let ret = [
-    //   {
-    //     purchase_id: "",
-    //     installment: "",
-    //     total: "",
-    //     products: [
-    //       {
-    //         name: "",
-    //         image_url: "",
-    //         amount: "",
-    //         obs: "",
-    //       },
-    //     ],
-    //   },
-    // ];
-    // // let ret = [];
-    // let counter = 0;
-    // purchases.forEach(async (purchase) => {
-    //   ret[counter] = {
-    //     purchase_id: purchase.id,
-    //     installment: purchase.installment,
-    //     total: purchase.total,
-    //   };
-    //   const pp = await knex
-    //     .select("*")
-    //     .from("purchase_products")
-    //     .where("purchase_id", "=", purchase.id);
-
-    //   pp.forEach(async (pprod) => {
-    //     const prod = await knex
-    //       .select("*")
-    //       .from("product")
-    //       .where("id", "=", pprod.product_id);
-    //     ret[counter].products.push({
-    //       name: prod.name,
-    //       image_url: prod.image_url,
-    //       amount: pprod.amount,
-    //       obs: pprod.observation,
-    //     });
-    //   });
-    //   counter++;
-    // });
-
-    // console.log(ret);
-
-    const purchases2 = await knex("purchase")
-      .join("purchase_products", "purchase.id", "purchase_products.purchase_id")
-      .join("product", "purchase_products.product_id", "product.id")
-      .select(
-        "purchase.id",
-        "purchase_products.amount",
-        "purchase_products.observation",
-        "purchase.installment",
-        "purchase.total",
-        "product.name"
-      )
-      .where({ user_id: user_id });
+      .count("purchase_products.id as items")
+      .join("purchase_products", "purchase_products.purchase_id", "purchase.id")
+      .where("user_id", "=", user_id)
+      .groupBy("purchase.id");
 
     return res.json(purchases);
+  }
+
+  async purchasesProducts(req, res) {
+    const purchase_id = req.params.id;
+    const pp = await knex.raw(
+      `select pp.purchase_id ,pp.product_id, pp.amount, pp.observation, p.name , p.image_url from purchase_products pp join product p where p.id = pp.product_id and pp.purchase_id = ${purchase_id};`
+    );
+    return res.json({ products: pp[0] });
   }
 }
 
