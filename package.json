@@ -3,7 +3,8 @@
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
     "migration:run": "knex  --knexfile knexfile.js migrate:latest",
-    "migration:reset": "knex  --knexfile knexfile.js migrate:rollback --all && knex migrate:latest"   
+    "migration:seed": "knex --knexfile knexfile.js  seed:run",
+    "migration:reset": "knex  --knexfile knexfile.js migrate:rollback --all && npm run migration:run && npm run migration:seed"    
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
