@@ -16,3 +16,5 @@ Execute o comando `yarn setup` para que as tabelas sejam criadas no banco de dad
 
 ### Execução do projeto:
 Inicie o projeto localmente com o comando `yarn dev`.
+
+Caso o projeto não consiga iniciar na porta **3333**,  você deve ir no arquivo **server.js** no diretório **/src** e alterar a parte `app.listen(process.env.PORT || 3333)` para uma porta disponível.
