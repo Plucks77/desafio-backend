@@ -2,6 +2,7 @@
   "scripts": {
     "start": "node ./src/server.js",
     "dev": "nodemon ./src/server.js",
+    "setup": "npm run migration:reset",
     "migration:run": "knex  --knexfile knexfile.js migrate:latest",
     "migration:seed": "knex --knexfile knexfile.js  seed:run",
     "migration:reset": "knex  --knexfile knexfile.js migrate:rollback --all && npm run migration:run && npm run migration:seed"    
